@@ -56,99 +56,102 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-xs-12">
-                        <h1 id="title">Cabapp</h1>
-						<img src="http://www.pollyscabinc.com/TaxiLogoFacingRight.jpg" alt="banner" id="banner">
-						
+                      
+						 <h1 id="title">Cab app</h1>
+						<img src="picture.jpg" alt="banner" id="banner"  height="250" width="250">
 						<h1 id="header"> Destination </h1>
 						<div class="row">
 							<div class="col-xs-6" id="train-feed">
 								<h2> Train Station </h2>
 								<div class="post">
+								
+								<div class="table-responsive"> 
+									<table class="table" >
+										<tr>
+											<td>Booking ID</td>
+											<td>Date/Time</td>
+											<td>Departing From</td>
+											<td>Arriving At</td>
+											<td>Booked By</td>
+											<td>Joiners</td>
+											<td>Total Seats</td>
+											<td>Confirmed</td>
+											<td>Join</td>
+										</tr>
 
-								<table>
-									<tr>
-										<td>Booking ID</td>
-										<td>Date/Time</td>
-										<td>Departing From</td>
-										<td>Arriving At</td>
-										<td>Booked By</td>
-										<td>Joiners</td>
-										<td>Total Seats</td>
-										<td>Confirmed</td>
-										<td>Join</td>
-									</tr>
-
-									<?php
-									if($stmt = $conn->prepare("SELECT `id`, `time`, `start_location`, `end_location`, `creator_id`, `confirmed`, `seats` FROM `" . $database . "`.`booking` WHERE `end_location` = 'Train Station'"))
-									{
-										$stmt->execute();
-										$stmt->store_result();
-										$stmt->bind_result($id, $time, $start_location, $end_location, $creator_id, $confirmed, $seats);
-										while($stmt->fetch())
+										<?php
+										if($stmt = $conn->prepare("SELECT `id`, `time`, `start_location`, `end_location`, `creator_id`, `confirmed`, `seats` FROM `" . $database . "`.`booking` WHERE `end_location` = 'Train Station'"))
 										{
-											echo("<tr>");
-											echo("<td>" . $id . "</td>");
-											echo("<td>" . $time . "</td>");
-											echo("<td>" . $start_location . "</td>");
-											echo("<td>" . $end_location . "</td>");
-											if($stmt2 = $conn->prepare("SELECT `email` FROM `" . $database . "`.`users` WHERE `id` = ?"))
+											$stmt->execute();
+											$stmt->store_result();
+											$stmt->bind_result($id, $time, $start_location, $end_location, $creator_id, $confirmed, $seats);
+											while($stmt->fetch())
 											{
-												$stmt2->bind_param("s", $creator_id);
-												$stmt2->execute();
-												$stmt2->store_result();
-												$stmt2->bind_result($email);
-												while($stmt2->fetch())
+												echo("<tr>");
+												echo("<td>" . $id . "</td>");
+												echo("<td>" . $time . "</td>");
+												echo("<td>" . $start_location . "</td>");
+												echo("<td>" . $end_location . "</td>");
+												if($stmt2 = $conn->prepare("SELECT `email` FROM `" . $database . "`.`users` WHERE `id` = ?"))
 												{
-													echo("<td>" . $email . "</td>");
-													break;
-												}
-											}
-
-											if($stmt1 = $conn->prepare("SELECT `user_id` FROM `" . $database . "`.`join_booking` WHERE booking_id = ?"))
-											{
-												$stmt1->bind_param("s", $id);
-												$stmt1->execute();
-												$stmt1->store_result();
-												$stmt1->bind_result($user_id);
-
-												echo("<td>");
-												$first = true;
-												while($stmt1->fetch())
-												{
-													if($first)
+													$stmt2->bind_param("s", $creator_id);
+													$stmt2->execute();
+													$stmt2->store_result();
+													$stmt2->bind_result($email);
+													while($stmt2->fetch())
 													{
-														echo($user_id);
-														$first = false;
-													}
-													else
-													{
-														echo(", " . $user_id);
+														echo("<td>" . $email . "</td>");
+														break;
 													}
 												}
-												echo("</td>");
+
+												if($stmt1 = $conn->prepare("SELECT `user_id` FROM `" . $database . "`.`join_booking` WHERE booking_id = ?"))
+												{
+													$stmt1->bind_param("s", $id);
+													$stmt1->execute();
+													$stmt1->store_result();
+													$stmt1->bind_result($user_id);
+
+													echo("<td>");
+													$first = true;
+													while($stmt1->fetch())
+													{
+														if($first)
+														{
+															echo($user_id);
+															$first = false;
+														}
+														else
+														{
+															echo(", " . $user_id);
+														}
+													}
+													echo("</td>");
+												}
+
+												echo("<td>" . $seats . "</td>");
+												echo("<td>" . $confirmed . "</td>");
+												echo("<td><a href='action/join_booking.php?booking_id=" . $id . "'>Join</a></td>");
+
+												echo("</tr>"); 
 											}
-
-											echo("<td>" . $seats . "</td>");
-											echo("<td>" . $confirmed . "</td>");
-											echo("<td><a href='action/join_booking.php?booking_id=" . $id . "'>Join</a></td>");
-
-											echo("</tr>"); 
+											$stmt->close();
 										}
-										$stmt->close();
-									}
-									else
-									{
-										echo("Failed to load bookings!");
-									}
-									?>
-								</table>
+										else
+										{
+											echo("Failed to load bookings!");
+										}
+										?>
+									</table>
 
+									</div>
 								</div>
 							</div>
 							<div class="col-xs-6" id="airport-feed">
 								<h2>Airport</h2>
 								<div class="post">
-								<table>
+								<div class="table-responsive"> 
+								<table class="table">
 									<tr>
 										<td>Booking ID</td>
 										<td>Date/Time</td>
@@ -205,11 +208,11 @@
 													}
 													else
 													{
-											echo(", " . $user_id);
-										}
-									}
-									echo("</td>");
-								}
+														echo(", " . $user_id);
+													}
+												}
+												echo("</td>");
+											}
 
 								echo("<td>" . $seats . "</td>");
 								echo("<td>" . $confirmed . "</td>");
@@ -225,6 +228,7 @@
 						}
 						?>
 					</table>
+					</div>
 					</div>
 							</div>
 						</div>

@@ -2,7 +2,9 @@
 	include("action/conn.php");
 ?>
 
-<form action="action/create_booking.php" method="POST">
+<?php include("sidebar.php"); ?>
+
+<form action="action/create_booking.php" method="POST" id="form">
 Destination:<br>
 <select name="end_location">
   <option value="Train Station">Train Station</option>
